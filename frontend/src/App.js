@@ -24,6 +24,11 @@ import Cart from "./component/Cart/Cart";
 import Shipping from "./component/Cart/Shipping";
 import ConfirmOrder from "./component/Cart/ConfirmOrder";
 import axios from "axios";
+// import axios from "axios";
+
+const API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "", 
+});
 import Payment from "./component/Cart/Payment";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -49,7 +54,7 @@ function App() {
 
   async function getStripeApiKey() {
     try {
-      const { data } = await axios.get("/api/v1/stripeapikey");
+      const { data } = await API.get("/api/v1/stripeapikey");
       setStripeApiKey(data.stripeApiKey);
     } catch (err) {
       console.log("Stripe API key could not be loaded yet.");
