@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef } from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../layout/MetaData";
+import { useNavigate } from "react-router-dom";
 import { Typography } from "@material-ui/core";
 import { useAlert } from "react-alert";
 import {
@@ -23,7 +24,8 @@ import EventIcon from "@material-ui/icons/Event";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { createOrder, clearErrors } from "../../actions/orderAction";
 
-const Payment = ({ history }) => {
+const Payment = () => {
+  const navigate = useNavigate();
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
 
   const dispatch = useDispatch();
@@ -100,7 +102,7 @@ const Payment = ({ history }) => {
 
           dispatch(createOrder(order));
 
-          history.push("/success");
+          navigate("/success");
         } else {
           alert.error("There's some issue while processing payment ");
         }
