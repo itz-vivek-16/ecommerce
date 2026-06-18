@@ -2,6 +2,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "", 
 });
+API.defaults.withCredentials = true;
 import {
   ALL_PRODUCT_FAIL,
   ALL_PRODUCT_REQUEST,

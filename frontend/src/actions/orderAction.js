@@ -24,6 +24,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "", 
 });
+API.defaults.withCredentials = true;
 // Create Order
 export const createOrder = (order) => async (dispatch) => {
   try {

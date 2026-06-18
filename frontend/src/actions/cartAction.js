@@ -7,6 +7,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "", // 👈 This covers the whole app!
 });
+API.defaults.withCredentials = true;
 // Add to Cart
 export const addItemsToCart = (id, quantity) => async (dispatch, getState) => {
   const { data } = await API.get(`/api/v1/product/${id}`);
