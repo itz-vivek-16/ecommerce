@@ -49,11 +49,14 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
   let products = await apiFeature.query;
 
-  let filteredProductsCount = products.clone().length;
+  let filteredProductsCount = products.length;
 
-  apiFeature.pagination(resultPerPage);
+  const apiFeatureForPagination = new ApiFeatures(Product.find(), req.query)
+  .search()
+  .filter()
+  .pagination(resultPerPage);
 
-  products = await apiFeature.query;
+  products = await apiFeatureForPagination.query;
 
   res.status(200).json({
     success: true,
