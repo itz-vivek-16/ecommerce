@@ -13,6 +13,10 @@ import {
 } from "@stripe/react-stripe-js";
 
 import axios from "axios";
+const API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "", 
+});
+API.defaults.withCredentials = true;
 import "./payment.css";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
@@ -56,7 +60,7 @@ const Payment = ({ history }) => {
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.post(
+      const { data } = await API.post(
         "/api/v1/payment/process",
         paymentData,
         config
