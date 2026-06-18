@@ -41,7 +41,7 @@ const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "", 
 });
 
-export default API;
+// export default API;
 // Login
 export const login = (email, password) => async (dispatch) => {
   try {
