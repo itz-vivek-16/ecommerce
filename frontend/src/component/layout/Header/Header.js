@@ -2,6 +2,9 @@ import React from "react";
 import { ReactNavbar } from "overlay-navbar";
 import logo from "../../../images/logo.png";
 
+// ✅ Import standard icon components from react-icons
+import { MdAccountCircle, MdSearch, MdShoppingCart } from "react-icons/md";
+
 const options = {
   burgerColorHover: "#eb4034",
   logo,
@@ -25,6 +28,17 @@ const options = {
   nav4justifyContent: "flex-start",
   link1ColorHover: "#eb4034",
   link1Margin: "1vmax",
+  
+  // ✅ 1. Enable the icon triggers explicitly
+  profileIcon: true,
+  searchIcon: true,
+  cartIcon: true,
+
+  // ✅ 2. Pass the component references down into the options configuration block
+  ProfileIconElement: MdAccountCircle,
+  SearchIconElement: MdSearch,
+  CartIconElement: MdShoppingCart,
+
   profileIconUrl: "/login",
   profileIconColor: "rgba(35, 35, 35,0.8)",
   searchIconColor: "rgba(35, 35, 35,0.8)",

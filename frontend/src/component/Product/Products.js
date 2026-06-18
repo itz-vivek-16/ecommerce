@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // ✅ Hook correctly imported
 import "./Products.css";
 import { useSelector, useDispatch } from "react-redux";
 import { clearErrors, getProduct } from "../../actions/productAction";
@@ -14,21 +15,22 @@ const categories = [
   "Laptop",
   "Footwear",
   "Bottom",
-  "Tops",
-  "Attire",
+  "Apparel",      // ✅ Added to match "Blue Denim Jacket"
+  "Electronics",  // ✅ Added to match "Smart Watch Pro" & "Wireless Headphones"
   "Camera",
   "SmartPhones",
 ];
 
-const Products = ({ match }) => {
+const Products = () => {
   const dispatch = useDispatch();
-
   const alert = useAlert();
+
+  // ✅ Extract the keyword parameter from the URL cleanly using v6 hook
+  const { keyword } = useParams();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 25000]);
   const [category, setCategory] = useState("");
-
   const [ratings, setRatings] = useState(0);
 
   const {
@@ -40,8 +42,6 @@ const Products = ({ match }) => {
     filteredProductsCount,
   } = useSelector((state) => state.products);
 
-  const keyword = match.params.keyword;
-
   const setCurrentPageNo = (e) => {
     setCurrentPage(e);
   };
@@ -49,6 +49,7 @@ const Products = ({ match }) => {
   const priceHandler = (event, newPrice) => {
     setPrice(newPrice);
   };
+  
   let count = filteredProductsCount;
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const Products = ({ match }) => {
       dispatch(clearErrors());
     }
 
+    // ✅ Now dispatches the safe variable directly
     dispatch(getProduct(keyword, currentPage, price, category, ratings));
   }, [dispatch, keyword, currentPage, price, category, ratings, alert, error]);
 
@@ -84,7 +86,7 @@ const Products = ({ match }) => {
               valueLabelDisplay="auto"
               aria-labelledby="range-slider"
               min={0}
-              max={25000}
+              max={1000000}
             />
 
             <Typography>Categories</Typography>
@@ -114,6 +116,7 @@ const Products = ({ match }) => {
               />
             </fieldset>
           </div>
+          
           {resultPerPage < count && (
             <div className="paginationBox">
               <Pagination

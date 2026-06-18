@@ -1,0 +1,29 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3000,
+    proxy: {
+      "/api": {
+        target: "http://localhost:4000",
+        changeOrigin: true,
+      },
+    },
+  },
+  // ✅ FIX: This tells Vite to support JSX syntax in BOTH .js and .jsx files smoothly
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        ".js": "jsx",
+        ".jsx": "jsx",
+      },
+    },
+  },
+  esbuild: {
+    loader: "jsx",
+    include: /\.(js|jsx)$/, // 👈 This covers both extensions!
+    exclude: [],
+  },
+});

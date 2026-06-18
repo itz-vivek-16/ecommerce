@@ -7,7 +7,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // ✅ Ensure this is here instead of useHistory
 import { useAlert } from "react-alert";
 import { logout } from "../../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,7 @@ const UserOptions = ({ user }) => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const [open, setOpen] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate(); // ✅ Ensure this hook instantiates correctly here
   const alert = useAlert();
   const dispatch = useDispatch();
 
@@ -44,18 +44,21 @@ const UserOptions = ({ user }) => {
   }
 
   function dashboard() {
-    history.push("/admin/dashboard");
+    navigate("/admin/dashboard"); // ✅ Ensure navigate() replaces history.push()
   }
 
   function orders() {
-    history.push("/orders");
+    navigate("/orders");
   }
+
   function account() {
-    history.push("/account");
+    navigate("/account");
   }
+
   function cart() {
-    history.push("/cart");
+    navigate("/cart");
   }
+
   function logoutUser() {
     dispatch(logout());
     alert.success("Logout Successfully");
@@ -86,7 +89,7 @@ const UserOptions = ({ user }) => {
             icon={item.icon}
             tooltipTitle={item.name}
             onClick={item.func}
-            tooltipOpen={window.innerWidth <= 600 ? true : false}
+            tooltipOpen={window.innerWidth <= 600}
           />
         ))}
       </SpeedDial>

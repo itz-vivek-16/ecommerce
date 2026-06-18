@@ -102,9 +102,10 @@ const Payment = ({ history }) => {
         }
       }
     } catch (error) {
-      payBtn.current.disabled = false;
-      alert.error(error.response.data.message);
-    }
+  payBtn.current.disabled = false;
+  // ✅ Safely checks if response and data exist before reading message
+  alert.error(error.response?.data?.message || error.message); 
+}
   };
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; 
 import Carousel from "react-material-ui-carousel";
 import "./ProductDetails.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,9 +23,12 @@ import {
 import { Rating } from "@material-ui/lab";
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 
-const ProductDetails = ({ match }) => {
+const ProductDetails = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
+  
+  // ✅ Extract the id directly from the URL path variable using React Router v6 Hook
+  const { id } = useParams();
 
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
@@ -36,7 +40,7 @@ const ProductDetails = ({ match }) => {
 
   const options = {
     size: "large",
-    value: product.ratings,
+    value: product ? product.ratings : 0,
     readOnly: true,
     precision: 0.5,
   };
@@ -47,7 +51,7 @@ const ProductDetails = ({ match }) => {
   const [comment, setComment] = useState("");
 
   const increaseQuantity = () => {
-    if (product.Stock <= quantity) return;
+    if (!product || product.Stock <= quantity) return;
 
     const qty = quantity + 1;
     setQuantity(qty);
@@ -61,7 +65,8 @@ const ProductDetails = ({ match }) => {
   };
 
   const addToCartHandler = () => {
-    dispatch(addItemsToCart(match.params.id, quantity));
+    // ✅ Updated from match.params.id to id
+    dispatch(addItemsToCart(id, quantity));
     alert.success("Item Added To Cart");
   };
 
@@ -74,7 +79,8 @@ const ProductDetails = ({ match }) => {
 
     myForm.set("rating", rating);
     myForm.set("comment", comment);
-    myForm.set("productId", match.params.id);
+    // ✅ Updated from match.params.id to id
+    myForm.set("productId", id);
 
     dispatch(newReview(myForm));
 
@@ -96,12 +102,16 @@ const ProductDetails = ({ match }) => {
       alert.success("Review Submitted Successfully");
       dispatch({ type: NEW_REVIEW_RESET });
     }
-    dispatch(getProductDetails(match.params.id));
-  }, [dispatch, match.params.id, error, alert, reviewError, success]);
+    
+    // ✅ Fetch details using the clean id variable instead of match.params.id
+    if (id) {
+      dispatch(getProductDetails(id));
+    }
+  }, [dispatch, id, error, alert, reviewError, success]);
 
   return (
     <Fragment>
-      {loading ? (
+      {loading || !product ? (
         <Loader />
       ) : (
         <Fragment>
@@ -202,10 +212,9 @@ const ProductDetails = ({ match }) => {
 
           {product.reviews && product.reviews[0] ? (
             <div className="reviews">
-              {product.reviews &&
-                product.reviews.map((review) => (
-                  <ReviewCard key={review._id} review={review} />
-                ))}
+              {product.reviews.map((review) => (
+                <ReviewCard key={review._id} review={review} />
+              ))}
             </div>
           ) : (
             <p className="noReviews">No Reviews Yet</p>

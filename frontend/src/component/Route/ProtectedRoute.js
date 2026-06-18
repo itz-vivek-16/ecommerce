@@ -1,30 +1,26 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { Redirect, Route } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import Loader from "../layout/Loader/Loader";
 
-const ProtectedRoute = ({ isAdmin, component: Component, ...rest }) => {
+const ProtectedRoute = ({ isAdmin }) => {
   const { loading, isAuthenticated, user } = useSelector((state) => state.user);
 
-  return (
-    <Fragment>
-      {loading === false && (
-        <Route
-          {...rest}
-          render={(props) => {
-            if (isAuthenticated === false) {
-              return <Redirect to="/login" />;
-            }
+  // 1. Wait until user auth data is fetched from backend
+  if (loading) return <Loader />;
 
-            if (isAdmin === true && user.role !== "admin") {
-              return <Redirect to="/login" />;
-            }
+  // 2. If user is not logged in, redirect them to the /login page
+  if (isAuthenticated === false) {
+    return <Navigate to="/login" replace />;
+  }
 
-            return <Component {...props} />;
-          }}
-        />
-      )}
-    </Fragment>
-  );
+  // 3. If route requires Admin status, check if user is an admin
+  if (isAdmin === true && user?.role !== "admin") {
+    return <Navigate to="/login" replace />;
+  }
+
+  // 4. If all checks pass, render the protected component nested inside
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
