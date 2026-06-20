@@ -11,12 +11,13 @@ const errorMiddleware = require("./middleware/error");
 if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({ path: "backend/config/config.env" });
 }
-app.use(
-  cors({
-    origin: "https://ecommerce-1-4ao3.onrender.com", // Your exact live frontend URL
-    credentials: true, // Crucial for letting cookies/tokens pass through
-  })
-);
+app.use(cors({
+    origin: [
+        "http://localhost:3000",                   // Allow local development
+        "https://ecommerce-1-4ao3.onrender.com"    // Allow your deployed frontend
+    ],
+    credentials: true // Required if you are sending cookies/tokens
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
